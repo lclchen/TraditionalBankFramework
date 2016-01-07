@@ -1,10 +1,10 @@
 package com.bank.server.model;
 
 public class Event {
-    final String TYPE_TRANSFER_IN = "transfer_in";
-    final String TYPE_TRANSFER_OUT = "transfer_out";
-    final String TYPE_WITHDRAW = "withdraw";
-    final String TYPE_DEPOSIT = "deposit";
+    static public final String TYPE_TRANSFER_IN = "transfer_in";
+    static public final String TYPE_TRANSFER_OUT = "transfer_out";
+    static public final String TYPE_WITHDRAW = "withdraw";
+    static public final String TYPE_DEPOSIT = "deposit";
 
     String eventId;
     String commandId;

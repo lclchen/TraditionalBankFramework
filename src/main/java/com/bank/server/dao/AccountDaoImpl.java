@@ -7,47 +7,37 @@ import java.sql.ResultSetMetaData;
 import java.util.*;
 
 import com.bank.server.model.Account;
+import com.bank.server.util.Logger;
 
 public class AccountDaoImpl implements AccountDao{
     public Connection conn;
 
     public AccountDaoImpl(Connection connection){
-        conn = connection;
+        this.conn = connection;
     }
 
     @Override
     public boolean createAccount(Account account) throws Exception{
-        //try{
-            //conn.setAutoCommit(false);
-        String sql = "insert into account (account_id, username, currency, balance, activated, revision) values(" +
-                account.getUuid() + "," +
-                account.getUsername() + "," +
-                account.getCurrency() + "," +
-                account.getBalance() + "," +
-                account.getActivated() + "," +
+        String sql = "insert into account (account_id, username, currency, balance, activated, revision) values(\"" +
+                account.getUuid() + "\", \"" +
+                account.getUsername() + "\", \"" +
+                account.getCurrency() + "\", \"" +
+                account.getBalance() + "\", " +
+                account.getActivated() + ", " +
                 account.getRevision() + ");";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.executeUpdate();
-//        }catch(Exception e){
-//            try {
-//                conn.rollback();
-//            } catch (Exception e1) {
-//                e1.printStackTrace();
-//            }
-//            e.printStackTrace();
-//            return false;
-//        }
-        //conn.commit();
+
         return true;
     }
 
     @Override
     public Account getAccountById(String uuid, boolean forUpdate) throws Exception{
-        String sql = "select * from account where account_id=" + uuid;
+        String sql = "select * from account where account_id=\"" + uuid;
         if(forUpdate)
-            sql += " for update;";
+            sql += "\" for update;";
         else
-            sql += ";";
+            sql += "\";";
         PreparedStatement statement = conn.prepareStatement(sql);
         ResultSet rs = statement.executeQuery();
         List<Map> list = convertList(rs);
@@ -59,12 +49,12 @@ public class AccountDaoImpl implements AccountDao{
 
     @Override
     public boolean updateAccount(String uuid, Account newAccount) throws Exception{
-        String sql = "update account set username=" + newAccount.getUsername() +
-                    ", currency=" + newAccount.getCurrency() +
-                    ", balance=" + newAccount.getBalance() +
-                    ", activated" + newAccount.getActivated() +
-                    ", revision" + newAccount.getRevision() +
-                    " where account_id=" + uuid + ";";
+        String sql = "update account set username=\"" + newAccount.getUsername() +
+                    "\", currency=\"" + newAccount.getCurrency() +
+                    "\", balance=\"" + newAccount.getBalance() +
+                    "\", activated=" + newAccount.getActivated() +
+                    ", revision=" + newAccount.getRevision() +
+                    " where account_id=\"" + uuid + "\";";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.executeUpdate();
         return true;
@@ -72,7 +62,7 @@ public class AccountDaoImpl implements AccountDao{
 
     @Override
     public boolean disableAccount(String uuid) throws Exception{
-        String sql = "update account set activated=False where account_id=" + uuid + ";";
+        String sql = "update account set activated=False where account_id=\"" + uuid + "\";";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.executeUpdate();
         return true;
@@ -99,8 +89,8 @@ public class AccountDaoImpl implements AccountDao{
         account.setUsername((String) map.get("username"));
         account.setCurrency((String) map.get("currency"));
         account.setBalance((String) map.get("balance"));
-        account.setActivated((String) map.get("activated"));
-        account.setRevision(Integer.valueOf((String) map.get("revision")));
+        account.setActivated(((Boolean) map.get("activated")).toString());
+        account.setRevision((Integer) map.get("revision"));
         return account;
     }
 }

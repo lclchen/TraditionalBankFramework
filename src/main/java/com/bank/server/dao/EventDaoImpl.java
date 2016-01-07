@@ -20,7 +20,7 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public Event getEventByEventId(String eventId) throws Exception {
-        String sql = "select * from event where event_id=" + eventId + ";";
+        String sql = "select * from event where event_id=\"" + eventId + "\";";
         PreparedStatement statement = conn.prepareStatement(sql);
         ResultSet rs = statement.executeQuery();
         List<Map> list = convertList(rs);
@@ -32,7 +32,7 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public List<Event> getEventByAccountId(String accountId) throws Exception {
-        String sql = "select * from event where account_id=" + accountId + ";";
+        String sql = "select * from event where account_id=\"" + accountId + "\";";
         PreparedStatement statement = conn.prepareStatement(sql);
         ResultSet rs = statement.executeQuery();
         List<Map> list = convertList(rs);
@@ -50,17 +50,17 @@ public class EventDaoImpl implements EventDao {
     @Override
     public boolean insertEvent(Event event) throws Exception {
         String sql = "insert into event (event_id, command_id, committed_time, account_id, currency, revision, type, " +
-                "account_transfer_in, account_transfer_out, amount) values(" +
-                event.getEventId() + ", " +
-                event.getCommandId() + ", " +
-                event.getCommittedTime() + ", " +
-                event.getAccountId() + ", " +
-                event.getCurrency() + ", " +
-                event.getAccountId() + ", " +
-                event.getType() + ", " +
-                event.getAccountTransferIn() + ", " +
-                event.getAccountTRansferOut() + ", " +
-                event.getAmount() + ");";
+                "account_transfer_in, account_transfer_out, amount) values(\"" +
+                event.getEventId() + "\", \"" +
+                event.getCommandId() + "\", \"" +
+                event.getCommittedTime() + "\", \"" +
+                event.getAccountId() + "\", \"" +
+                event.getCurrency() + "\", " +
+                event.getRevision() + ", \"" +
+                event.getType() + "\", \"" +
+                event.getAccountTransferIn() + "\", \"" +
+                event.getAccountTRansferOut() + "\", \"" +
+                event.getAmount() + "\");";
         PreparedStatement statement = conn.prepareStatement(sql);
         statement.executeUpdate();
         return true;
