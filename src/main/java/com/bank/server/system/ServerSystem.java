@@ -19,9 +19,9 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
     private String dbUsername;
     private String dbPassword;
 
+    // poolSize is the size of ExecutorService and ConnectionPool
+    private int poolSize = 150;
     public ConnectionPool pool;
-    // poolSize is the size of ExecutorService
-    private int poolSize = 20;
     public ExecutorService threadPool;
 
     private int remotePort = 9999;
@@ -32,6 +32,8 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
 
     public void init(){
         pool = new ConnectionPool(jdbcDriver, dbUrl, dbUsername, dbPassword);
+        pool.setMaxConnections(poolSize);
+
         threadPool = Executors.newFixedThreadPool(poolSize);
     }
 
