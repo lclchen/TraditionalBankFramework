@@ -20,6 +20,7 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
     private String dbPassword;
 
     public ConnectionPool pool;
+    // poolSize is the size of ExecutorService
     private int poolSize = 20;
     public ExecutorService threadPool;
 
@@ -36,7 +37,7 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
 
     public boolean handleCommand(Command cmd) throws RemoteException{
         try {
-            threadPool.execute(new CommandHandler(pool.getConnection(), cmd));
+            threadPool.execute(new CommandHandler(pool, cmd));
             Logger.logger.info("ServerSystem handleCommand() success, command_id:" + cmd.getCommandId());
             return true;
         }catch (Exception e){
@@ -48,7 +49,7 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
     public boolean insertAccount(UUID uuid, String username, BigDecimal balance, String currency, boolean activated,
                                  int revision) throws RemoteException{
         try {
-            threadPool.execute(new AccountHandler(pool.getConnection(), uuid, username, balance, currency,
+            threadPool.execute(new AccountHandler(pool, uuid, username, balance, currency,
                     activated, revision));
             Logger.logger.info("ServerSystem inserAccount() success, account_id:" + uuid.toString());
             return true;
@@ -62,8 +63,12 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
     public class CommandHandler implements Runnable{
         ReportServiceImpl service;
         Command cmd;
+        Connection conn;
+        ConnectionPool pool;
 
-        public CommandHandler(Connection conn, Command cmd){
+        public CommandHandler(ConnectionPool pool, Command cmd)throws Exception{
+            this.conn = pool.getConnection();
+            this.pool = pool;
             service = new ReportServiceImpl(conn);
             this.cmd = cmd;
         }
@@ -71,12 +76,15 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
         @Override
         public void run() {
             service.handleCommand(cmd);
+            pool.returnConnection(conn);
         }
     }
 
     // Runnable
     public class AccountHandler implements Runnable {
         ReportServiceImpl service;
+        Connection conn;
+        ConnectionPool pool;
 
         UUID uuid;
         String username;
@@ -85,8 +93,10 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
         boolean activated;
         int revision;
 
-        public AccountHandler(Connection conn, UUID uuid, String username, BigDecimal balance, String currency,
-                              boolean activated, int revision){
+        public AccountHandler(ConnectionPool pool, UUID uuid, String username, BigDecimal balance, String currency,
+                              boolean activated, int revision) throws Exception{
+            this.conn = pool.getConnection();
+            this.pool = pool;
             service = new ReportServiceImpl(conn);
 
             this.uuid = uuid;
@@ -100,6 +110,7 @@ public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
         @Override
         public void run() {
             service.insertAccount(uuid, username, balance, currency, activated, revision);
+            pool.returnConnection(conn);
         }
     }
 

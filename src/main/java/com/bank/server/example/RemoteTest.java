@@ -26,7 +26,5 @@ public class RemoteTest {
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
-
 }

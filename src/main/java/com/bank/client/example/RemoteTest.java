@@ -24,7 +24,10 @@ public class RemoteTest {
         client.insertAccount(uuid, "Toddy", new BigDecimal("100"), "RMB", true, 1);
         Thread.sleep(1000);
 
-        Command cmd = CommandFactory.getCommand(UUID.randomUUID(), uuid, "RMB", Command.TYPE_DEPOSIT, null, null, new BigDecimal(10));
-        client.sendCommand(cmd);
+        while(true) {
+            Command cmd = CommandFactory.getCommand(UUID.randomUUID(), uuid, "RMB", Command.TYPE_DEPOSIT, null, null, new BigDecimal(10));
+            client.sendCommand(cmd);
+            Thread.sleep(1);
+        }
     }
 }
