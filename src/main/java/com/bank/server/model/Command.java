@@ -1,6 +1,8 @@
 package com.bank.server.model;
 
-public class Command {
+import java.io.Serializable;
+
+public class Command implements Serializable{
     static public final String TYPE_TRANSFER = "transfer";
     static public final String TYPE_WITHDRAW = "withdraw";
     static public final String TYPE_DEPOSIT = "deposit";

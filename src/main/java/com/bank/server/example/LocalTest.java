@@ -9,19 +9,23 @@ import java.util.UUID;
 
 public class LocalTest {
     public static void main(String[] args) throws Exception{
-        ServerSystem system = new ServerSystem();
-        system.setJdbcDriver("com.mysql.jdbc.Driver");
-        system.setDbUrl("jdbc:mysql://localhost:3306/banksystem");
-        system.setDbUsername("root");
-        system.setDbPassword("sdsd");
+        ServerSystem server = new ServerSystem();
+        server.setJdbcDriver("com.mysql.jdbc.Driver");
+        server.setDbUrl("jdbc:mysql://localhost:3306/banksystem");
+        server.setDbUsername("root");
+        server.setDbPassword("sdsd");
         //Could change connection-pool settings: system.pool.XXXX();
-        system.init();
+        server.init();
 
+
+        //----------------
+        //   start test
+        //----------------
         UUID uuid = UUID.randomUUID();
-        system.insertAccount(uuid, "Toddy", new BigDecimal("100"), "RMB", true, 1);
+        server.insertAccount(uuid, "Toddy", new BigDecimal("100"), "RMB", true, 1);
         Thread.sleep(1000);
 
         Command cmd = CommandFactory.getCommand(UUID.randomUUID(), uuid, "RMB", Command.TYPE_DEPOSIT, null, null, new BigDecimal(10));
-        system.handleCommand(cmd);
+        server.handleCommand(cmd);
     }
 }

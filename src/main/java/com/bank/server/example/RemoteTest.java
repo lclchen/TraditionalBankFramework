@@ -9,16 +9,18 @@ import java.rmi.registry.LocateRegistry;
 public class RemoteTest {
     public static void main(String[] args){
         try{
-            ServerSystem system = new ServerSystem();
-            system.setJdbcDriver("com.mysql.jdbc.Driver");
-            system.setDbUrl("jdbc:mysql://localhost:3306/banksystem");
-            system.setDbUsername("root");
-            system.setDbPassword("sdsd");
+            ServerSystem server = new ServerSystem();
+            server.setJdbcDriver("com.mysql.jdbc.Driver");
+            server.setDbUrl("jdbc:mysql://localhost:3306/banksystem");
+            server.setDbUsername("root");
+            server.setDbPassword("sdsd");
             //Could change connection-pool settings: system.pool.XXXX();
-            system.init();
+            server.init();
 
-            LocateRegistry.createRegistry(9999);
-            Naming.bind("rmi://localhost:9999/RemoteServerSystem", system);
+            //Could change rmi port and url
+            // initial the system
+            LocateRegistry.createRegistry(server.getRemotePort());
+            Naming.bind(server.getRemoteUrl(), server);
             Logger.logger.info("RemoteServerSystem: Start binding");
 
         }catch(Exception e){

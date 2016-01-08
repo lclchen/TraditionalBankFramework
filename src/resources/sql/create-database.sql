@@ -22,3 +22,5 @@ create table if not exists event (
   account_transfer_out varchar(30),
   amount varchar(30)
 );
+
+alter table event add INDEX account_id_index (account_id);

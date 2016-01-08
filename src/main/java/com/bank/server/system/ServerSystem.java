@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ServerSystem extends UnicastRemoteObject{
+public class ServerSystem extends UnicastRemoteObject implements IServerSystem{
     private String jdbcDriver;
     private String dbUrl;
     private String dbUsername;
@@ -22,6 +22,10 @@ public class ServerSystem extends UnicastRemoteObject{
     public ConnectionPool pool;
     private int poolSize = 20;
     public ExecutorService threadPool;
+
+    private int remotePort = 9999;
+    private String remoteUrl = "rmi://localhost:9999/RemoteServerSystem";
+    private String remoteName = "RemoteServerSystem";
 
     public ServerSystem() throws RemoteException {}
 
@@ -111,31 +115,55 @@ public class ServerSystem extends UnicastRemoteObject{
         return dbUrl;
     }
 
-    public void setDbUrl(String dbUrl){
+    public void setDbUrl(String dbUrl) {
         this.dbUrl = dbUrl;
     }
 
-    public String getDbUsername(){
+    public String getDbUsername() {
         return dbUsername;
     }
 
-    public void setDbUsername(String dbUsername){
+    public void setDbUsername(String dbUsername) {
         this.dbUsername = dbUsername;
     }
 
-    public String getDbPassword(){
+    public String getDbPassword() {
         return dbPassword;
     }
 
-    public void setDbPassword(String dbPassword){
+    public void setDbPassword(String dbPassword) {
         this.dbPassword = dbPassword;
     }
 
-    public int getPoolSize(){
+    public int getPoolSize() {
         return poolSize;
     }
 
-    public void setPoolSize(int poolSize){
+    public void setPoolSize(int poolSize) {
         this.poolSize = poolSize;
+    }
+
+    public int getRemotePort() {
+        return remotePort;
+    }
+
+    public void setRemotePort(int remotePort) {
+        this.remotePort = remotePort;
+    }
+
+    public String getRemoteUrl() {
+        return remoteUrl;
+    }
+
+    public void setRemoteUrl(String remoteUrl) {
+        this.remoteUrl = remoteUrl;
+    }
+
+    public String getRemoteName() {
+        return remoteName;
+    }
+
+    public void setRemoteName(String remoteName) {
+        this.remoteName = remoteName;
     }
 }
